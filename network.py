@@ -98,8 +98,6 @@ class Classifier(Network):
 
 
 class ClassifierTrainer(Classifier):
-    def __init__(self, *structure):  # TODO: find use or remove
-        super().__init__(*structure)
 
     def train_parallel(self, training_set):
         gradient = Gradient(*self.get_structure())
