@@ -1,6 +1,6 @@
 import os
 import pickle
-from networks import network
+
 
 class FileManager:
     def __init__(self, files_dir="files", default_file_name="default.txt"):
@@ -8,10 +8,13 @@ class FileManager:
 
         if not os.path.exists(files_dir):
             os.makedirs(files_dir)
-        os.chdir(os.path.join(os.getcwd(), files_dir))
+
+        save_files_location = os.path.join(os.getcwd(), files_dir)
+        os.chdir(save_files_location)
 
         self.loaded_object = None
         self.load(self.__current_file_name)
+
 
     @property
     def current_file_name(self):
