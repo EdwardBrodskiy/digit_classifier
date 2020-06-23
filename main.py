@@ -1,6 +1,6 @@
 from tkinter import *
 from gui import run_gui, pop_up
-from networks import file_manager
+from file_managers import file_manager
 
 
 class MasterGUI:

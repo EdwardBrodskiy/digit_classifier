@@ -11,7 +11,7 @@ class FileManager:
         os.chdir(os.path.join(os.getcwd(), files_dir))
 
         self.loaded_object = None
-        # self.load(self.__current_file_name)
+        self.load(self.__current_file_name)
 
     @property
     def current_file_name(self):
