@@ -1,7 +1,7 @@
 from tkinter import *
 
 
-class Graph:
+class Graph: # TODO: full re work
     def __init__(self, root, data, bounds="default", width=200, height=100, colour_set=None):
         self.root = root
         self.width = width

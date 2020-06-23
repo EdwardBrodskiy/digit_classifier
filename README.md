@@ -26,3 +26,13 @@ of neural networks as I had to implement algorithms such as back propagation by 
 - Add debug tools to GUI
 
 - create graphing tool
+
+<b>Current Problems</b>
+
+The accuracy on testing data ends up being rather high however when actually drawing digits in the tool the accuracy is
+much lower. Currently I believe it is due to a bad scaling system(from image drawn to what gets fed to the network). I 
+doubt that it is due to over fitting but I will be able to fully test it when I add monitoring tools.
+
+All of the MNIST data is loaded at once into memory which may not be the optimal way. I might attempt to make it load it
+in chunks but I would have to make sure that it doesn't slow down the training process with constant loads. Or possibly
+could add two options(low memory usage mode).
