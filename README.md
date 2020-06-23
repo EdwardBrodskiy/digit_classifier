@@ -11,6 +11,10 @@ Originally this project was made for me to learn about how basic classifiers wor
 level python libraries such as TensorFlow. Instead I decided to use numpy which helped me much better learn the basics
 of neural networks as I had to implement algorithms such as back propagation by my self.
 
+<b>Preview at Current stage</b>
+
+![Classification of a 2](https://github.com/EdwardBrodskiy/digit_classifier/blob/master/preview/example-2.png)
+
 <b>Functionality</b>
 
 - Run a selected Network with drawing gui
