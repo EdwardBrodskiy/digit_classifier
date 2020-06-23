@@ -1,6 +1,6 @@
 import numpy as np
-import network
-import DataHandler
+from networks import network
+from file_managers import DataHandler
 
 '''
 
@@ -11,8 +11,8 @@ window = Visual.Visual(top)
 '''
 save_to = input("Save to what file: ")
 
-training_data = DataHandler.read_mnist("data/train/train-images.idx3-ubyte", "data/train/train-labels.idx1-ubyte")
-testing_data = DataHandler.read_mnist("data/test/t10k-images.idx3-ubyte", "data/test/t10k-labels.idx1-ubyte")
+training_data = DataHandler.read_mnist("../training_data/train/train-images.idx3-ubyte", "training_data/train/train-labels.idx1-ubyte")
+testing_data = DataHandler.read_mnist("../training_data/test/t10k-images.idx3-ubyte", "training_data/test/t10k-labels.idx1-ubyte")
 structure = [784, 16, 16, 10]
 net = network.ClassifierTrainer(*structure)
 # net = network.Network([784, 256, 16, 10]).load('best.txt')

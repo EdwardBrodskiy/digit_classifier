@@ -1,6 +1,5 @@
-import numpy as np
 from tkinter import *
-import data_renderer
+from gui import data_renderer
 
 
 class Visual:

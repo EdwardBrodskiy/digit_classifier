@@ -1,8 +1,7 @@
 from tkinter import *
 import numpy as np
-import network
-import data_renderer
-import DataAnalyser
+from gui import data_renderer
+from analyzer_tools import DataAnalyser
 
 
 class RunGUI:

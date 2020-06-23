@@ -1,5 +1,5 @@
 from tkinter import *
-import network
+from networks import network
 
 
 class NewNetwork:

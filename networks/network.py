@@ -106,8 +106,8 @@ class ClassifierTrainer(Classifier):
             with concurrent.futures.ProcessPoolExecutor() as executor:
                 results = executor.map(self.back_prop, [(training_set[label], label) for _ in training_set[label]])
                 """
-                for data in training_set[label]:
-                    results.append(executor.submit(self.back_prop, (data, label)))
+                for training_data in training_set[label]:
+                    results.append(executor.submit(self.back_prop, (training_data, label)))
 
                 for f in concurrent.futures.as_completed(results):
                     gradient += f.result()

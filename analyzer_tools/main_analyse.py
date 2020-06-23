@@ -1,16 +1,14 @@
-import numpy as np
-import DataAnalyser
-import DataHandler
-import pickle
+from analyzer_tools import DataAnalyser
+from file_managers import DataHandler
 
-training_data = DataHandler.read_mnist("data/train/train-images.idx3-ubyte", "data/train/train-labels.idx1-ubyte")
+training_data = DataHandler.read_mnist("../training_data/train/train-images.idx3-ubyte", "training_data/train/train-labels.idx1-ubyte")
 
 sizes = DataAnalyser.brightness(training_data)
 
 
 
 
-# width and height data
+# width and height training_data
 '''
 with open("sizes.txt", 'wb') as file:
     pickle.dump(sizes, file)
