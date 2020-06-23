@@ -1,5 +1,9 @@
 # Digit Classifier
 
+A handwriten digit classifier network trained on the MNIST data set of normalized handwriten digit images. The program
+uses the numpy library to handle the matrix operations of the neural network. The program also includes a tool for
+drawing your own digits with instant feedback from the loaded network.
+
 This project is currently not finished and is still in development. Currently it provides a gui for manipulating and 
 training networks. See functionality below.
 
