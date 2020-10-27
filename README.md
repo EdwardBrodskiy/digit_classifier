@@ -13,7 +13,7 @@ of neural networks as I had to implement algorithms such as back propagation by 
 
 <b>Preview at Current stage</b>
 
-![Classification of a 2](https://github.com/EdwardBrodskiy/digit_classifier/blob/master/preview/example-2.png)
+![Classification of a 2](https://github.com/EdwardBrodskiy/digit_classifier/blob/master/sample-images/example-2.png)
 
 <b>Functionality</b>
 
