@@ -23,7 +23,7 @@ class Visual:
         for label in data:
             for digit in data[label]:
                 self.img_data_out.append(data_renderer.ImageData(Frame(self.image), scale_of_pixel, digit, label, "none"))
-                self.img_data_out[-1].root.grid(row=index // side, column=index % side)
+                self.img_data_out[-1].window.grid(row=index // side, column=index % side)
                 index += 1
 
     def update_results_on_data(self, results):

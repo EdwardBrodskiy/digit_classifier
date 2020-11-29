@@ -17,7 +17,7 @@ class MasterGUI:
 
         root.config(menu=self.menu_bar)
 
-        # setup frame structure
+        # setup window structure
         self.train_UI_frame = Frame(root, width=600, height=600)
         self.train_UI_frame.grid(column=0, row=0)
 
