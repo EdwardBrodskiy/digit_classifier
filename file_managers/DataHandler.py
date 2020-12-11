@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def read_mnist(file_path_imgs, file_path_labels):
+def read_mnist(file_path_imgs, file_path_labels, amount=1):
     with open(file_path_imgs, "rb") as imgs:
         with open(file_path_labels, "rb") as labels:
             number_of_elements, img_resolution = get_meta_data(imgs, labels)
@@ -9,7 +9,7 @@ def read_mnist(file_path_imgs, file_path_labels):
 
             data = {i: [] for i in range(10)}
 
-            for i in range(number_of_elements):
+            for i in range(int(round(number_of_elements * amount, 0))):
                 label = int.from_bytes(labels.read(1), byteorder='big')
                 image = []
                 for j in range(elements_per_img):

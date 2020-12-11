@@ -1,6 +1,8 @@
 from tkinter import *
-from gui import run_gui, pop_up
+
 from file_managers import file_manager
+from gui import run_gui, pop_up
+from gui.trainer import TrainerGUI
 
 
 class MasterGUI:
@@ -18,12 +20,19 @@ class MasterGUI:
         root.config(menu=self.menu_bar)
 
         # setup window structure
-        self.train_UI_frame = Frame(root, width=600, height=600)
-        self.train_UI_frame.grid(column=0, row=0)
+        self.main_ui = Frame(root)
+        self.main_ui.pack()
+
+        # setup tabs
+        self._tabs = {}
 
         # setup modules
 
         self.file_handler = file_manager.FileManager()
+
+        # default tab
+
+        self._train()
 
     # Menu bar methods
     def _setup_file_menu(self):
@@ -47,7 +56,7 @@ class MasterGUI:
         run_menu = Menu(self.menu_bar, tearoff=0)
         run_menu.add_command(label="Run", command=self._run_run)
         run_menu.add_command(label="Debug", command=self.to_do)
-        run_menu.add_command(label="Train", command=self.to_do)
+        run_menu.add_command(label="Train", command=self._train)
         self.menu_bar.add_cascade(label="Run", menu=run_menu)
         return run_menu
 
@@ -66,13 +75,20 @@ class MasterGUI:
     def _run_run(self):
         run_gui.RunGUI(self.root, self.file_handler.loaded_object, title=self.file_handler.current_file_name)
 
+    def _train(self):
+        tab_name = 'train'
+        if tab_name not in self._tabs:
+            self._tabs[tab_name] = TrainerGUI(self.main_ui, self.file_handler.loaded_object, width=600, height=400)
+        self.main_ui.pack_forget()
+        self._tabs[tab_name].pack()
+
     @staticmethod
     def to_do():
         print("TODO")
 
 
-root = Tk()
+app = Tk()
 
-ui = MasterGUI(root)
+ui = MasterGUI(app)
 
-root.mainloop()
+app.mainloop()

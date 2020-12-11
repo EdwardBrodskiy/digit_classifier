@@ -15,7 +15,6 @@ class FileManager:
         self.loaded_object = None
         self.load(self.__current_file_name)
 
-
     @property
     def current_file_name(self):
         return self.__current_file_name
