@@ -16,6 +16,7 @@ class Size:
 class Keys:
     x: str = 't'
     y: str = 'y'
+    labels: Union[List[str], None] = None
 
 
 @dataclass
@@ -36,19 +37,27 @@ class GraphConfig:
 
 
 class Graph(Frame):
-    def __init__(self, master=None, cfg: GraphConfig = GraphConfig()):
-        super().__init__(master)
+    def __init__(self, master=None, cfg: GraphConfig = GraphConfig(), bg='black', **kwargs):
+        super().__init__(master, bg=bg, **kwargs)
 
         self.cfg = cfg
 
         self._data = []
         self._lines = []
 
-        self.colors = None
+        self.colors = []
 
-        self.canvas = Canvas(self, width=self.cfg.size.width, height=self.cfg.size.height)
+        self.canvas = Canvas(self, width=self.cfg.size.width, height=self.cfg.size.height, highlightthickness=0, bg=self['bg'])
         self.canvas.pack()
-        self.canvas.create_rectangle(0, 0, self.cfg.size.width, self.cfg.size.height, fill='black')
+
+        self.key_frame = Frame(self)
+        self.key_frame.pack()
+        self._labels = []
+        if self.cfg.keys.labels is not None:
+            self.colors = generate_color_set(len(self.cfg.keys.labels))
+            for i, label in enumerate(self.cfg.keys.labels):
+                self._labels.append(Label(self.key_frame, text=label, fg=self.colors[i], bg=self['bg']))
+                self._labels[-1].pack(side=LEFT)
 
     def write(self, new_points: List[float]):
         self.cfg.limits.y_max = max(*new_points, self.cfg.limits.y_max)
@@ -65,7 +74,7 @@ class Graph(Frame):
         self._draw_lines()
 
     def _draw_lines(self):
-        if self.colors is None:
+        if len(self.colors) < len(self._data[-1]):
             self.colors = generate_color_set(len(self._data[0]))
         self._clear_lines()
         step = self._get_step()
@@ -75,7 +84,7 @@ class Graph(Frame):
             col = []
             for line_i, point, next_point in zip(range(len(points)), points, next_points):
                 y0, y1 = self._scale_value(point), self._scale_value(next_point)
-                col.append(self.canvas.create_line(x0, y0, x1, y1, fill=self.colors[line_i], width=3))
+                col.append(self.canvas.create_line(x0, y0, x1, y1, fill=self.colors[line_i]))
             self._lines.append(col)
 
     def _clear_lines(self):
@@ -109,7 +118,8 @@ if __name__ == '__main__':
     double_circle = [r / 720 * math.pi for r in range(0, 721, 1)]
     window = Tk()
 
-    ui = Graph(window, GraphConfig(Size(1200, 700), limits=Limits(3, -2)))
+    labels = list(map(lambda x: str(x), range(-10, 11)))
+    ui = Graph(window, GraphConfig(Size(1200, 700), Keys(labels=labels)), bg='black')
     ui.pack()
     # import time
     # st = time.time()

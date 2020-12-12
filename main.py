@@ -78,7 +78,7 @@ class MasterGUI:
     def _train(self):
         tab_name = 'train'
         if tab_name not in self._tabs:
-            self._tabs[tab_name] = TrainerGUI(self.main_ui, self.file_handler.loaded_object, width=600, height=400)
+            self._tabs[tab_name] = TrainerGUI(self.main_ui, self.file_handler, width=600, height=400)
         self.main_ui.pack_forget()
         self._tabs[tab_name].pack()
 
