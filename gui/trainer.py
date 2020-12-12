@@ -1,5 +1,3 @@
-from typing import List
-
 from file_managers import DataHandler
 from file_managers.file_manager import FileManager
 from gui.graph import *
@@ -13,6 +11,7 @@ class TrainerGUI(Frame):
     def __init__(self, master=None, file_manager: FileManager = None, **kwargs):
         super().__init__(master, **kwargs)
         self.file_manager = file_manager
+        self.file_manager.bind(self.on_new_network)
 
         # upper
         self.upper_ui = Frame()
@@ -38,12 +37,12 @@ class TrainerGUI(Frame):
         self.main_ui.pack(fill='both')
 
         self.require_loaded_trainer()
-        self.net_info = NetworkInfoUI(self.main_ui, self.file_manager.loaded_object)
+        self.net_info = NetworkInfoUI(self.main_ui, self.file_manager.current_file_name[:-4], self.file_manager.loaded_object)
         self.net_info.grid(column=0, row=0)
-        self.g1 = Graph(self.main_ui, GraphConfig(keys=Keys(labels=list(range(10)))))
-        self.g1.grid(column=1, row=0)
-        self.g2 = Graph(self.main_ui)
-        self.g2.grid(column=0, row=1)
+        self.graph_all_digits = Graph(self.main_ui, GraphConfig(limits=Limits(x_count=100), keys=Keys(labels=list(range(10)))))
+        self.graph_all_digits.grid(column=1, row=0)
+        self.graph_average = Graph(self.main_ui)
+        self.graph_average.grid(column=0, row=1)
 
         self.status_label.change_status('loading')
 
@@ -52,12 +51,15 @@ class TrainerGUI(Frame):
         self.update()
         self.training_data = DataHandler.read_mnist("../training_data/train/train-images.idx3-ubyte",
                                                     "../training_data/train/train-labels.idx1-ubyte",
-                                                    )
+                                                    amount=0.3)
         self.testing_data = DataHandler.read_mnist("../training_data/test/t10k-images.idx3-ubyte",
                                                    "../training_data/test/t10k-labels.idx1-ubyte",
-                                                   )
+                                                   amount=0.3)
         self.points = {i: 0 for i in self.training_data}
         self.status_label.change_status('ready')
+
+    def on_new_network(self):
+        self.net_info.update_network(self.file_manager.current_file_name[:-4], self.file_manager.loaded_object)
 
     def require_loaded_trainer(self):
         if type(self.file_manager.loaded_object) is ClassifierTrainer:
@@ -79,7 +81,8 @@ class TrainerGUI(Frame):
             gradient = self.file_manager.loaded_object.train(training_set)
             gradient = gradient.__idiv__(50)
             self.file_manager.loaded_object -= gradient
-            self.test_network(None)
+            if len(training_set[0]) == 0:
+                self.test_network(None)
         self.status_label.change_status('ready')
 
     def pause_training(self, event):
@@ -91,9 +94,12 @@ class TrainerGUI(Frame):
         self.status_label.change_status('testing')
         accuracies: List[float] = [0 for _ in range(10)]
         for label in self.testing_data:
+            self.update_idletasks()
+            self.update()
             for i in self.testing_data[label]:
                 if self.file_manager.loaded_object.pick(self.file_manager.loaded_object.calculate(i)) == label:
                     accuracies[label] += 1
             accuracies[label] = accuracies[label] / len(self.testing_data[label])
-        self.g1.write(accuracies)
+        self.graph_all_digits.write(accuracies)
+        self.graph_average.write([sum(accuracies) / len(accuracies)])
         self.status_label.change_status('ready')

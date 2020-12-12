@@ -4,12 +4,19 @@ from networks.network import Network
 
 
 class NetworkInfoUI(Frame):
-    def __init__(self, master=None, network: Network = None, **kwargs):
+    def __init__(self, master=None, network_name='', network: Network = None, **kwargs):
         super(NetworkInfoUI, self).__init__(master, **kwargs)
         if network is None:
             Label(self, text='No Network').grid(column=0, row=0)
             return
         self.network = network
-        self.structure = Label(self, text=f'Structure: {network.get_structure()}')
+        self.name = Label(self, text=network_name)
+        self.structure = Label(self, text=f'Structure: {self.network.get_structure()}')
 
-        self.structure.grid(column=0, row=0)
+        self.name.grid(column=0, row=0)
+        self.structure.grid(column=0, row=1)
+
+    def update_network(self, name, network):
+        self.network = network
+        self.name.configure(text=name)
+        self.structure.configure(text=f'Structure: {self.network.get_structure()}')
