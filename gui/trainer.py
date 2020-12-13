@@ -51,10 +51,10 @@ class TrainerGUI(Frame):
         self.update()
         self.training_data = DataHandler.read_mnist("../training_data/train/train-images.idx3-ubyte",
                                                     "../training_data/train/train-labels.idx1-ubyte",
-                                                    amount=0.3)
+                                                    )
         self.testing_data = DataHandler.read_mnist("../training_data/test/t10k-images.idx3-ubyte",
                                                    "../training_data/test/t10k-labels.idx1-ubyte",
-                                                   amount=0.3)
+                                                   )
         self.points = {i: 0 for i in self.training_data}
         self.status_label.change_status('ready')
 
@@ -77,11 +77,14 @@ class TrainerGUI(Frame):
             self.status_label.change_status('running')
             self.update_idletasks()
             self.update()
-            training_set, points = DataHandler.take_out_each(self.training_data, 5, self.points)
+
+            training_set, self.points = DataHandler.take_out_each(self.training_data, 5, self.points)
             gradient = self.file_manager.loaded_object.train(training_set)
             gradient = gradient.__idiv__(50)
             self.file_manager.loaded_object -= gradient
+
             if len(training_set[0]) == 0:
+                self.points = {digit: len(self.training_data[digit]) for digit in self.training_data}
                 self.test_network(None)
         self.status_label.change_status('ready')
 
