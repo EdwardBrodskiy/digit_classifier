@@ -10,6 +10,12 @@ Originally this project was made for me to learn about how basic classifiers wor
 
 ![Classification of a 2](https://github.com/EdwardBrodskiy/digit_classifier/blob/master/sample-images/example-2.png)
 
+<b>Installation</b>
+
+git clone https://github.com/EdwardBrodskiy/digit_classifier ./digit_classifier
+
+pip install -r requirements.txt
+
 <b>Functionality</b>
 
 - Run a selected Network with drawing gui
