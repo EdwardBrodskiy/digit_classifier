@@ -1,5 +1,5 @@
 from analyzer_tools import DataAnalyser
-from file_managers import DataHandler
+from data_managers import DataHandler
 
 training_data = DataHandler.read_mnist("../training_data/train/train-images.idx3-ubyte", "training_data/train/train-labels.idx1-ubyte")
 

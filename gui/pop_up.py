@@ -1,4 +1,5 @@
 from tkinter import *
+
 from networks import network
 
 
@@ -67,7 +68,7 @@ class LoadNetwork:
         self.top = Toplevel(root)
         self.file_handler = file_handler
 
-        Label(self.top, text="Double click to select").pack()
+        Label(self.top, text="Double click to_status select").pack()
 
         self.options = Listbox(self.top)
         self.options.pack()

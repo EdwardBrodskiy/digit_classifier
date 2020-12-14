@@ -1,6 +1,6 @@
 from tkinter import *
 
-from file_managers import file_manager
+from data_managers import file_manager
 from gui import run_gui, pop_up
 from gui.trainer import TrainerGUI
 

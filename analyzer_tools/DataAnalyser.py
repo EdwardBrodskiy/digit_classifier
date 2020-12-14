@@ -1,6 +1,3 @@
-import numpy as np
-
-
 def get_size_range(data):
     result = [[0, 0] for _ in data]
 
