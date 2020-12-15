@@ -36,20 +36,35 @@ class SettingsGUI(Frame):
         super().__init__(master, **kw)
 
         self.schema = schema if schema is not None else EmptySettings(self)
-        self.parse_schema(self, self.schema)
+        self._parse_schema(self, self.schema)
 
     def change_schema(self, new_schema):
         self.schema = new_schema
-        self.parse_schema(self, self.schema)
+        self._parse_schema(self, self.schema)
+
+    def wait_for(self, function, is_not=False):
+        value = False
+        while value == is_not:
+            value = function()
+            self.update_idletasks()
+            self.update()
+        return value
 
     @staticmethod
-    def parse_schema(root, schema):
+    def try_get(get_function):
+        try:
+            return get_function()
+        except TclError:
+            return None
+
+    @staticmethod
+    def _parse_schema(root, schema):
         attributes = schema.__dict__
         for name, value in attributes.items():
             name = name.replace('_', ' ')
             if is_dataclass(value):
                 frame = Frame(root)
-                SettingsGUI.parse_schema(frame, value)
+                SettingsGUI._parse_schema(frame, value)
                 frame.pack(fill='x', pady=10)
             elif isinstance(value, (DoubleVar, StringVar, IntVar)):
                 widget = LabeledWidget(root, text=name)
@@ -62,3 +77,8 @@ class SettingsGUI(Frame):
             else:
                 widget = Label(root, text=name, bg='light grey')
                 widget.pack(fill='x')
+
+
+
+
+

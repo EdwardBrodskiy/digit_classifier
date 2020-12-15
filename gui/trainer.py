@@ -20,6 +20,12 @@ class NetworkSettings:
     def __post_init__(self):
         self.gradient_multiplier = DoubleVar(self.network, 1.0)
 
+    def get_gradient_multiplier(self):
+        value = SettingsGUI.try_get(self.gradient_multiplier.get)
+        if value is not None and value > 0:
+            return value
+        return False
+
 
 @dataclass
 class DataHandlerSettings:
@@ -27,15 +33,30 @@ class DataHandlerSettings:
     sub_set_size: Optional[IntVar] = None
 
     def __post_init__(self):
-        self.sub_set_size = IntVar(self.data_handler, 1000)
+        self.sub_set_size = IntVar(self.data_handler, 16)
+
+    def get_sub_set_size(self):
+        value = SettingsGUI.try_get(self.sub_set_size.get)
+        if value is not None and value > 0:
+            return value
+        return False
+
 
 @dataclass
 class GeneralSettings:
     general_settings: Widget
     number_of_epochs: Optional[IntVar] = None
+    test_network_after_epoch: Optional[BooleanVar] = None
 
     def __post_init__(self):
         self.number_of_epochs = IntVar(self.general_settings, 0)
+        self.test_network_after_epoch = BooleanVar(self.general_settings, True)
+
+    def get_number_of_epochs(self):
+        value = SettingsGUI.try_get(self.number_of_epochs.get)
+        if value is not None:
+            return value
+        return False
 
 
 @dataclass
@@ -125,17 +146,23 @@ class TrainerGUI(Frame):
         self.is_training = True
         self.status_label.push('running')
         while self.is_training:
-            self.settings.general.number_of_epochs.set(self.settings.general.number_of_epochs.get() - 1)
-            if self.settings.general.number_of_epochs.get() == 0:
+            number_of_epochs = self.validate_input(self.settings.general.get_number_of_epochs)
+            self.settings.general.number_of_epochs.set(number_of_epochs - 1)
+            if self.validate_input(self.settings.general.get_number_of_epochs) == 0:
                 self.pause_training()
-            self.training_data.groups = self.settings.data_handler.sub_set_size.get()
+            self.training_data.groups = self.validate_input(self.settings.data_handler.get_sub_set_size)
+
             for training_set in self.training_data.get_epoch():
                 self.update_idletasks()
                 self.update()
+
                 gradient = self.file_manager.loaded_object.train(training_set)
-                gradient = gradient.__idiv__(self.training_data.groups / self.settings.network.gradient_multiplier.get())
+                gradient_multiplier = self.validate_input(self.settings.network.get_gradient_multiplier)
+                gradient = gradient.__idiv__(self.training_data.groups / gradient_multiplier)
                 self.file_manager.loaded_object -= gradient
-            self.test_network()
+
+            if self.settings.general.test_network_after_epoch.get():
+                self.test_network()
 
         # as to get here we need to have paused so pop pausing and running
         self.status_label.pop()
@@ -162,3 +189,11 @@ class TrainerGUI(Frame):
         self.graph_all_digits.write(accuracies)
         self.graph_average.write([sum(accuracies) / len(accuracies)])
         self.status_label.pop()
+
+    def validate_input(self, get_function, undesired=False):
+        value = get_function()
+        if value is undesired:
+            self.status_label.push('error')
+            value = self.settings_ui.wait_for(get_function)
+            self.status_label.pop()
+        return value
