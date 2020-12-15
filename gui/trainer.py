@@ -1,10 +1,54 @@
+from dataclasses import dataclass
+from tkinter import *
+from typing import List, Optional
+
 from data_managers import DataHandler
 from data_managers.file_manager import FileManager
-from gui.graph import *
+from gui.graph import Graph, GraphConfig, Limits, Keys
 from gui.network_info import NetworkInfoUI
 from gui.pop_up import LoadNetwork
+from gui.settings_gui import SettingsGUI
 from gui.status_label import StatusLabel
 from networks.network import ClassifierTrainer
+
+
+@dataclass
+class NetworkSettings:
+    network: Widget
+    gradient_multiplier: Optional[DoubleVar] = None
+
+    def __post_init__(self):
+        self.gradient_multiplier = DoubleVar(self.network, 1.0)
+
+
+@dataclass
+class DataHandlerSettings:
+    data_handler: Widget
+    sub_set_size: Optional[IntVar] = None
+
+    def __post_init__(self):
+        self.sub_set_size = IntVar(self.data_handler, 1000)
+
+@dataclass
+class GeneralSettings:
+    general_settings: Widget
+    number_of_epochs: Optional[IntVar] = None
+
+    def __post_init__(self):
+        self.number_of_epochs = IntVar(self.general_settings, 0)
+
+
+@dataclass
+class TrainerSettings:
+    settings: Widget
+    network: Optional[NetworkSettings] = None
+    data_handler: Optional[DataHandlerSettings] = None
+    general: Optional[GeneralSettings] = None
+
+    def __post_init__(self):
+        self.network = NetworkSettings(self.settings)
+        self.data_handler = DataHandlerSettings(self.settings)
+        self.general = GeneralSettings(self.settings)
 
 
 class TrainerGUI(Frame):
@@ -20,17 +64,14 @@ class TrainerGUI(Frame):
         self.status_label = StatusLabel(self.upper_ui)
         self.status_label.pack(side=LEFT, fill='both')
 
-        self.start_button = Button(self.upper_ui, text='Start', bg='green')
+        self.start_button = Button(self.upper_ui, text='Start', bg='green', command=self.start_training)
         self.start_button.pack(side=RIGHT)
-        self.start_button.bind('<Button-1>', self.start_training)
 
-        self.pause_button = Button(self.upper_ui, text='Pause', bg='orange')
+        self.pause_button = Button(self.upper_ui, text='Pause', bg='orange', state='disabled', command=self.pause_training)
         self.pause_button.pack(side=RIGHT)
-        self.pause_button.bind('<Button-1>', self.pause_training)
 
-        self.test_button = Button(self.upper_ui, text='test', bg='cyan')
+        self.test_button = Button(self.upper_ui, text='test', bg='cyan', command=self.test_network)
         self.test_button.pack(side=RIGHT)
-        self.test_button.bind('<Button-1>', self.test_network)
 
         # main
         self.main_ui = Frame()
@@ -57,6 +98,13 @@ class TrainerGUI(Frame):
                                                     )
         self.status_label.pop()
 
+        # settings_ui
+
+        self.settings: TrainerSettings = TrainerSettings(self.main_ui)
+
+        self.settings_ui = SettingsGUI(self.main_ui, schema=self.settings)
+        self.settings_ui.grid(column=2, row=0, rowspan=2, ipadx=2)
+
     def on_new_network(self):
         self.net_info.update_network(self.file_manager.current_file_name[:-4], self.file_manager.loaded_object)
 
@@ -69,28 +117,37 @@ class TrainerGUI(Frame):
             self.status_label.pop()
             return False
 
-    def start_training(self, event):
+    def start_training(self):
         if not self.require_loaded_trainer():
             return
+        self.start_button.configure(state='disabled')
+        self.pause_button.configure(state='normal')
         self.is_training = True
         self.status_label.push('running')
         while self.is_training:
+            self.settings.general.number_of_epochs.set(self.settings.general.number_of_epochs.get() - 1)
+            if self.settings.general.number_of_epochs.get() == 0:
+                self.pause_training()
+            self.training_data.groups = self.settings.data_handler.sub_set_size.get()
             for training_set in self.training_data.get_epoch():
                 self.update_idletasks()
                 self.update()
                 gradient = self.file_manager.loaded_object.train(training_set)
-                gradient = gradient.__idiv__(self.training_data.groups)
+                gradient = gradient.__idiv__(self.training_data.groups / self.settings.network.gradient_multiplier.get())
                 self.file_manager.loaded_object -= gradient
-            self.test_network(None)
+            self.test_network()
+
         # as to get here we need to have paused so pop pausing and running
         self.status_label.pop()
         self.status_label.pop()
+        self.start_button.configure(state='normal')
 
-    def pause_training(self, event):
+    def pause_training(self):
+        self.pause_button.configure(state='disabled')
         self.status_label.push('pausing')
         self.is_training = False
 
-    def test_network(self, event):
+    def test_network(self):
         if not self.require_loaded_trainer():
             return
         self.status_label.push('testing')
