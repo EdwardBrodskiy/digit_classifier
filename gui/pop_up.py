@@ -3,6 +3,8 @@ from tkinter.ttk import *
 
 from networks import network
 
+file_extension = '\N{cucumber}'
+
 
 class NewNetwork:
     def __init__(self, root, file_handeler):
@@ -49,7 +51,7 @@ class NewNetwork:
     def enter(self, event):
         if self._is_valid():
             self.file_handler.loaded_object = network.ClassifierTrainer(*list(map(lambda e: int(e.get()), self.structure_entries)))
-            self.file_handler.save_as(self.name.get() + '.txt')
+            self.file_handler.save_as(self.name.get() + file_extension)
             self.top.destroy()
 
     def _is_valid(self):
@@ -76,7 +78,7 @@ class LoadNetwork:
 
         self.file_names = self.file_handler.show_all()
         for file_name in self.file_names:
-            self.options.insert(END, file_name)
+            self.options.insert(END, file_name.split('.')[0])
 
         self.options.bind("<Double-Button-1>", self.select)
 
@@ -95,16 +97,14 @@ class SaveByName:
 
         self.entry = Entry(self.top)
         self.entry.pack()
-        self.entry.insert(END, self.file_handler.current_file_name)
+        self.entry.insert(END, self.file_handler.current_file_name.split('.')[0])
 
         self.enter_button = Button(self.top, text="Enter")
         self.enter_button.pack()
         self.enter_button.bind("<Button-1>", self.enter)
 
     def enter(self, event):
-        if self._is_valid():
-            self.file_handler.save_as(self.entry.get())
-            self.top.destroy()
+        self.file_handler.save_as(self.entry.get() + '.' + file_extension)
+        self.top.destroy()
 
-    def _is_valid(self):
-        return self.entry.get()[-4:] == ".txt"
+

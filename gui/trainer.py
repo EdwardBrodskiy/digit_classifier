@@ -103,7 +103,7 @@ class TrainerGUI(Frame):
         self.main_ui.pack(fill='both')
 
         self.require_loaded_trainer()
-        self.net_info = NetworkInfoUI(self.main_ui, self.file_manager.current_file_name[:-4], self.file_manager.loaded_object)
+        self.net_info = NetworkInfoUI(self.main_ui, self.file_manager.current_file_name, self.file_manager.loaded_object)
         self.net_info.grid(column=0, row=0)
         self.graph_all_digits = Graph(self.main_ui, GraphConfig(limits=Limits(x_count=100), keys=Keys(labels=list(range(10)))))
         self.graph_all_digits.grid(column=1, row=0)
@@ -131,7 +131,7 @@ class TrainerGUI(Frame):
         self.settings_ui.grid(column=2, row=0, rowspan=2, ipadx=2)
 
     def on_new_network(self):
-        self.net_info.update_network(self.file_manager.current_file_name[:-4], self.file_manager.loaded_object)
+        self.net_info.update_network(self.file_manager.current_file_name, self.file_manager.loaded_object)
 
     def require_loaded_trainer(self):
         if type(self.file_manager.loaded_object) is ClassifierTrainer:
@@ -165,8 +165,6 @@ class TrainerGUI(Frame):
                 gradient_multiplier = self.validate_input(self.settings.network.get_gradient_multiplier)
                 gradient = gradient.__idiv__(self.training_data.groups / gradient_multiplier)
                 self.file_manager.loaded_object -= gradient
-
-
 
             if self.settings.general.test_network_after_epoch.get():
                 self.test_network()

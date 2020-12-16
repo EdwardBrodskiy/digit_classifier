@@ -45,7 +45,7 @@ class SettingsGUI(Frame):
 
     def wait_for(self, function, is_not=False):
         value = False
-        while value == is_not:
+        while value is is_not:
             value = function()
             self.update_idletasks()
             self.update()

@@ -3,7 +3,7 @@ import pickle
 
 
 class FileManager:
-    def __init__(self, files_dir="files", default_file_name="default.txt"):
+    def __init__(self, files_dir="files", default_file_name="default.🥒"):
         self.__current_file_name = default_file_name
         self.bound = []
 
