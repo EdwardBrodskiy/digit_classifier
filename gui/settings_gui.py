@@ -1,5 +1,6 @@
 from dataclasses import dataclass, is_dataclass
 from tkinter import *
+from tkinter.ttk import *
 from typing import Union
 
 
@@ -75,7 +76,7 @@ class SettingsGUI(Frame):
                 widget.set_widget(Checkbutton(widget, variable=value))
                 widget.pack()
             else:
-                widget = Label(root, text=name, bg='light grey')
+                widget = Label(root, text=name.capitalize(), background='#232829', anchor="center")
                 widget.pack(fill='x')
 
 

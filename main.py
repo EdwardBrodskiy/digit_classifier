@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter.ttk import *
 
 from data_managers import file_manager
 from gui import run_gui, pop_up
@@ -10,6 +11,10 @@ class MasterGUI:
         self.root = root
 
         self.root.title("Digit Classifier")
+        # style
+        self.style = Style()
+        self.style.theme_use('awdark')
+
         # setup menu bar
         self.menu_bar = Menu(root)
 
@@ -88,6 +93,9 @@ class MasterGUI:
 
 
 app = Tk()
+
+app.tk.call('lappend', 'auto_path', './awthemes-10.0.0')
+app.tk.call('package', 'require', 'awdark')
 
 ui = MasterGUI(app)
 

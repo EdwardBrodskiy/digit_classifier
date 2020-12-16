@@ -1,16 +1,16 @@
 from collections import deque
-from tkinter import *
+from tkinter.ttk import *
 
 
 class StatusLabel(Label):
     status_types = {
-        'loading': {'text': 'Loading...', 'bg': 'yellow', 'fg': 'black'},
-        'ready': {'text': 'Ready!.', 'bg': 'green', 'fg': 'black'},
-        'running': {'text': 'Running', 'bg': 'yellow', 'fg': 'black'},
-        'pausing': {'text': 'Pausing...', 'bg': 'orange', 'fg': 'black'},
-        'testing': {'text': 'Testing...', 'bg': 'cyan', 'fg': 'black'},
-        'error': {'text': 'ERROR', 'bg': 'red', 'fg': 'white'},
-        'invalid_status': {'text': 'INVALID STATUS', 'bg': 'red', 'fg': 'white'},
+        'loading': {'text': 'Loading...', 'background': 'yellow', 'foreground': 'black'},
+        'ready': {'text': 'Ready!.', 'background': 'green', 'foreground': 'black'},
+        'running': {'text': 'Running', 'background': 'yellow', 'foreground': 'black'},
+        'pausing': {'text': 'Pausing...', 'background': 'orange', 'foreground': 'black'},
+        'testing': {'text': 'Testing...', 'background': 'cyan', 'foreground': 'black'},
+        'error': {'text': 'ERROR', 'background': 'red', 'foreground': 'white'},
+        'invalid_status': {'text': 'INVALID STATUS', 'background': 'red', 'foreground': 'white'},
     }
 
     def __init__(self, master=None, default_status='ready'):

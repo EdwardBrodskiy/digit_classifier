@@ -1,4 +1,6 @@
 from tkinter import *
+from tkinter.ttk import *
+
 from gui import data_renderer
 
 

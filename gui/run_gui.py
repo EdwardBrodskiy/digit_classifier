@@ -1,7 +1,10 @@
 from tkinter import *
+from tkinter.ttk import *
+
 import numpy as np
-from gui import data_renderer
+
 from analyzer_tools import DataAnalyser
+from gui import data_renderer
 
 
 class RunGUI:

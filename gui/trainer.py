@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from tkinter import *
+from tkinter.ttk import *
 from typing import List, Optional
 
 from data_managers import DataHandler
@@ -80,18 +81,18 @@ class TrainerGUI(Frame):
 
         # upper
         self.upper_ui = Frame()
-        self.upper_ui.pack(anchor='n', fill='x', ipadx=4, padx=2, pady=2)
+        self.upper_ui.pack(anchor='n', fill='x')
 
         self.status_label = StatusLabel(self.upper_ui)
         self.status_label.pack(side=LEFT, fill='both')
 
-        self.start_button = Button(self.upper_ui, text='Start', bg='green', command=self.start_training)
+        self.start_button = Button(self.upper_ui, text='Start', command=self.start_training)
         self.start_button.pack(side=RIGHT)
 
-        self.pause_button = Button(self.upper_ui, text='Pause', bg='orange', state='disabled', command=self.pause_training)
+        self.pause_button = Button(self.upper_ui, text='Pause', state='disabled', command=self.pause_training)
         self.pause_button.pack(side=RIGHT)
 
-        self.test_button = Button(self.upper_ui, text='test', bg='cyan', command=self.test_network)
+        self.test_button = Button(self.upper_ui, text='test', command=self.test_network)
         self.test_button.pack(side=RIGHT)
 
         # main

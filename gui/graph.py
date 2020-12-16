@@ -1,6 +1,7 @@
 import math
 from dataclasses import dataclass
 from tkinter import *
+from tkinter.ttk import *
 from typing import Union, List, Iterator, Tuple
 
 from utilities.colors import generate_color_set
@@ -37,8 +38,8 @@ class GraphConfig:
 
 
 class Graph(Frame):
-    def __init__(self, master=None, cfg: GraphConfig = GraphConfig(), bg='black', **kwargs):
-        super().__init__(master, bg=bg, **kwargs)
+    def __init__(self, master=None, cfg: GraphConfig = GraphConfig(), **kwargs):
+        super().__init__(master, **kwargs)
 
         self.cfg = cfg
 
@@ -47,7 +48,7 @@ class Graph(Frame):
 
         self.colors = []
 
-        self.canvas = Canvas(self, width=self.cfg.size.width, height=self.cfg.size.height, highlightthickness=0, bg=self['bg'])
+        self.canvas = Canvas(self, width=self.cfg.size.width, height=self.cfg.size.height, background='black', highlightthickness=0)
         self.canvas.pack()
 
         self.key_frame = Frame(self)
@@ -56,7 +57,7 @@ class Graph(Frame):
         if self.cfg.keys.labels is not None:
             self.colors = generate_color_set(len(self.cfg.keys.labels))
             for i, label in enumerate(self.cfg.keys.labels):
-                self._labels.append(Label(self.key_frame, text=label, fg=self.colors[i], bg=self['bg']))
+                self._labels.append(Label(self.key_frame, text=label, foreground=self.colors[i]))
                 self._labels[-1].pack(side=LEFT)
 
     def write(self, new_points: List[float]):
