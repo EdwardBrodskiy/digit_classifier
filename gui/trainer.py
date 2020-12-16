@@ -86,6 +86,9 @@ class TrainerGUI(Frame):
         self.status_label = StatusLabel(self.upper_ui)
         self.status_label.pack(side=LEFT, fill='both')
 
+        self.progress_bar = Progressbar(self.upper_ui, maximum=60000, length=600)
+        self.progress_bar.pack(side=LEFT, fill='both')
+
         self.start_button = Button(self.upper_ui, text='Start', command=self.start_training)
         self.start_button.pack(side=RIGHT)
 
@@ -154,6 +157,7 @@ class TrainerGUI(Frame):
             self.training_data.groups = self.validate_input(self.settings.data_handler.get_sub_set_size)
 
             for training_set in self.training_data.get_epoch():
+                self.progress_bar.step(self.training_data.groups)
                 self.update_idletasks()
                 self.update()
 
@@ -161,6 +165,8 @@ class TrainerGUI(Frame):
                 gradient_multiplier = self.validate_input(self.settings.network.get_gradient_multiplier)
                 gradient = gradient.__idiv__(self.training_data.groups / gradient_multiplier)
                 self.file_manager.loaded_object -= gradient
+
+
 
             if self.settings.general.test_network_after_epoch.get():
                 self.test_network()
