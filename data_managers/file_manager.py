@@ -3,8 +3,9 @@ import pickle
 
 
 class FileManager:
-    def __init__(self, files_dir="files", default_file_name="default.🥒"):
+    def __init__(self, files_dir="files", default_file_name="default", default_file_extension='pickle'):
         self.__current_file_name = default_file_name
+        self.__default_file_extension = default_file_extension
         self.bound = []
 
         if not os.path.exists(files_dir):
@@ -30,17 +31,17 @@ class FileManager:
         self._call_binds()
 
     def load(self, file_name):
-        with open(file_name, 'rb') as file:
+        with open(f'{file_name}.{self.__default_file_extension}', 'rb') as file:
             self.loaded_object = pickle.load(file)
             self.__current_file_name = file_name
         self._call_binds()
 
     def save(self):
-        with open(self.__current_file_name, 'wb') as file:
+        with open(f'{self.current_file_name}.{self.__default_file_extension}', 'wb') as file:
             pickle.dump(self.loaded_object, file)
 
     def save_as(self, file_name):
-        with open(file_name, 'wb') as file:
+        with open(f'{file_name}.{self.__default_file_extension}', 'wb') as file:
             pickle.dump(self.loaded_object, file)
             self.__current_file_name = file_name
         self._call_binds()

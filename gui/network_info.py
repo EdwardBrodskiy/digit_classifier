@@ -11,7 +11,7 @@ class NetworkInfoUI(Frame):
             Label(self, text='No Network').grid(column=0, row=0)
             return
         self.network = network
-        self.name = Label(self, text=network_name.split('.')[0])
+        self.name = Label(self, text=network_name)
         self.structure = Label(self, text=f'Structure: {self.network.get_structure()}')
 
         self.name.grid(column=0, row=0)
@@ -19,5 +19,5 @@ class NetworkInfoUI(Frame):
 
     def update_network(self, name, network):
         self.network = network
-        self.name.configure(text=name.split('.')[0])
+        self.name.configure(text=name)
         self.structure.configure(text=f'Structure: {self.network.get_structure()}')

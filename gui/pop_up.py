@@ -3,13 +3,11 @@ from tkinter.ttk import *
 
 from networks import network
 
-file_extension = '\N{cucumber}'
-
 
 class NewNetwork:
-    def __init__(self, root, file_handeler):
+    def __init__(self, root, file_handler):
         self.top = Toplevel(root)
-        self.file_handler = file_handeler
+        self.file_handler = file_handler
 
         self.title = Label(self.top, text="Create new Network")
 
@@ -50,8 +48,9 @@ class NewNetwork:
 
     def enter(self, event):
         if self._is_valid():
-            self.file_handler.loaded_object = network.ClassifierTrainer(*list(map(lambda e: int(e.get()), self.structure_entries)))
-            self.file_handler.save_as(self.name.get() + file_extension)
+            self.file_handler.loaded_object = network.ClassifierTrainer(*list(map(lambda e: int(e.get()),
+                                                                                  self.structure_entries)))
+            self.file_handler.save_as(self.name.get())
             self.top.destroy()
 
     def _is_valid(self):
@@ -78,13 +77,13 @@ class LoadNetwork:
 
         self.file_names = self.file_handler.show_all()
         for file_name in self.file_names:
-            self.options.insert(END, file_name.split('.')[0])
+            self.options.insert(END, '.'.join(file_name.split('.')[:-1]))
 
         self.options.bind("<Double-Button-1>", self.select)
 
     def select(self, event):
-        index = self.options.curselection()[0]
-        self.file_handler.load(self.file_names[index])
+        file_name = self.options.get(ACTIVE)
+        self.file_handler.load(file_name)
         self.top.destroy()
 
 
@@ -97,14 +96,12 @@ class SaveByName:
 
         self.entry = Entry(self.top)
         self.entry.pack()
-        self.entry.insert(END, self.file_handler.current_file_name.split('.')[0])
+        self.entry.insert(END, self.file_handler.current_file_name)
 
         self.enter_button = Button(self.top, text="Enter")
         self.enter_button.pack()
         self.enter_button.bind("<Button-1>", self.enter)
 
     def enter(self, event):
-        self.file_handler.save_as(self.entry.get() + '.' + file_extension)
+        self.file_handler.save_as(self.entry.get())
         self.top.destroy()
-
-
